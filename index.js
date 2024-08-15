@@ -1,6 +1,7 @@
-http = require('http');
-url = require('url');
 fs = require('fs');
+
+const express = require('express');
+const app = express();
 
 const { getFilenames, thisFunction } = require('./auxFunctions.js');
 const pathHTML = './src-html/';
@@ -8,7 +9,7 @@ const pathHTML = './src-html/';
 let validFilenames
 getFilenames().then(result => validFilenames = result);
 
-const myServer = http.createServer(function(req, res) {
+app.get('*', function(req, res) {
     const indexFile = thisFunction(req.url, validFilenames);
     fs.readFile(pathHTML + validFilenames[indexFile], function(error, data) {
         if (error) {
@@ -28,4 +29,4 @@ const myServer = http.createServer(function(req, res) {
     });
 });
 
-myServer.listen(8080, () => console.log('server is up'));
+app.listen(8080, () => console.log('server is up'));
